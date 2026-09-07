@@ -43,6 +43,12 @@ State important exclusions or boundaries when they prevent scope ambiguity. End 
 
 Do not treat the original request alone as approval of a later plan. A reply clearly accepting the plan or named items—such as “按计划执行”, “执行 1 和 3”, or an equivalent unambiguous instruction—authorizes only those items and the described approach. If the response changes the plan, restate the resulting scope when needed and obtain confirmation before writing.
 
+## Keep planning out of artifacts
+
+Keep modification plans, approval notes, progress reports, and implementation commentary in the conversation. Do not copy them into source files, README files, configuration, generated artifacts, or other project content unless the user explicitly requests an ADR, changelog, decision record, or similar documentation.
+
+When adding or revising project documentation, review every new paragraph before staging it. Keep the paragraph only when a future user needs it and it describes enduring project behavior. Remove text whose main purpose is to narrate the current task, its approvals, rejected alternatives, or implementation progress.
+
 ## Alternative Recommendation
 
 Keep the user's approach as the plan unless it is infeasible, unsafe, or the user chooses another option.

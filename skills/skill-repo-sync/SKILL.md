@@ -35,6 +35,12 @@ Default to a private GitHub repository when visibility is unspecified because Sk
 
 Document the exact clone URL and first-machine/new-machine commands in the README. Keep credentials, tokens, private certificates, `.env` files, and machine-specific state out of version control.
 
+## Keep repository artifacts durable
+
+Write repository files for future users, not as a transcript of the current task. Include only durable operating instructions, interfaces, commands, constraints, and information needed to maintain the repository.
+
+Keep migration commentary, approval history, progress reports, rejected alternatives, and explanations of what was excluded in the conversation unless the user explicitly requests an ADR, changelog, decision record, or similar artifact. Before committing documentation, remove any sentence whose main purpose is to explain this turn's planning or decisions rather than the repository's enduring behavior.
+
 ## Install Skills
 
 Prefer the repository's `scripts/install.sh` when present.
@@ -65,6 +71,7 @@ Before committing:
 
 - review status and the complete diff;
 - confirm no secret or machine-specific file is included;
+- review each new documentation paragraph and keep it only when a future user needs it and it describes enduring behavior;
 - include only the intended Skill and supporting repository changes;
 - use a focused commit message, preferably Conventional Commits when that matches the repository;
 - push only when the user asked to publish or sync the change.

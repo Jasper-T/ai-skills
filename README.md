@@ -24,8 +24,6 @@ ai-skills/
 - `git-commit-message`
 - `skill-repo-sync`
 
-`microsoft-foundry` 是可独立更新的 Microsoft 官方 Skill，不纳入个人源码仓库。
-
 ## 在新机器上安装
 
 ```bash
