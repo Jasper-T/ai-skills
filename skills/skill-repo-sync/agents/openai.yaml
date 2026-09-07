@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Skills Sync"
+  short_description: "Maintain a Git-backed Skills repository across machines"
+  default_prompt: "Use $skill-repo-sync to set up or safely synchronize my personal Skills repository."
