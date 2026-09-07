@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Modification"
+  short_description: "Plan and approve project changes before writing"
+  default_prompt: "Use $controlled-code-modification to analyze this requested project change, propose a numbered plan, and wait for my scope approval before writing."

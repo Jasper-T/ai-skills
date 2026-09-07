@@ -11,10 +11,20 @@ ai-skills/
 │   ├── install.sh        # 安装或链接仓库内的 Skills
 │   └── update.sh         # 快进拉取后重新安装
 └── skills/
-    └── skill-repo-sync/  # 维护本仓库的工作流 Skill
+    ├── code-modification/   # 修改前规划并确认范围
+    ├── git-commit-message/  # Conventional Commits 提交消息
+    └── skill-repo-sync/     # 维护本仓库的同步工作流
         ├── SKILL.md
         └── agents/openai.yaml
 ```
+
+## 已纳入同步的 Skills
+
+- `code-modification`
+- `git-commit-message`
+- `skill-repo-sync`
+
+`microsoft-foundry` 是可独立更新的 Microsoft 官方 Skill，不纳入个人源码仓库。
 
 ## 在新机器上安装
 
