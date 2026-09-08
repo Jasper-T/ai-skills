@@ -50,7 +50,7 @@ Prefer the repository's `scripts/install.sh` when present.
 - Never overwrite an existing destination silently. Stop and show the conflict, or use the repository's explicit backup-and-replace option after authorization.
 - Keep the repository's directory names aligned with each Skill's frontmatter name.
 
-After installation, verify that each destination exists and that linked paths resolve to the repository copy.
+After installation, verify that each destination exists and that linked paths resolve to the repository copy. The installer preflights conflicts and source overlap; backups use sibling `.<target-basename>.backups/<skill>.<unique>/original`. On partial failure, report completed items and backups; do not claim rollback or auto-delete partial results.
 
 ## Sync and update
 
@@ -59,7 +59,7 @@ Prefer the repository's `scripts/update.sh` when present. Before pulling:
 1. Check for uncommitted and untracked changes.
 2. Check the active branch and configured upstream.
 3. Pull with fast-forward-only behavior.
-4. Re-run installation so newly added Skills become available.
+4. Re-run installation so newly added Skills become available. If installation then fails, report updated source but incomplete installation; fix installation without resetting Git.
 
 If the working tree is dirty, branches have diverged, or a merge conflict appears, stop and preserve the current state. Explain the choices; do not automatically stash, reset, clean, rewrite history, or force-push.
 

@@ -46,7 +46,7 @@ cd ai-skills
 ./scripts/install.sh --target /path/to/skills
 ```
 
-若目标位置已有同名内容，脚本会停止并保留原文件。确认要替换时可加 `--force`；原内容会先移动到带时间戳的备份路径，而不是直接删除。
+若目标位置已有同名内容，脚本会停止并保留原文件。确认要替换时可加 `--force`；脚本会先检查全部同名冲突，再开始安装。原内容会移动到安装目录旁的唯一备份目录，例如目标为 `/path/to/skills` 时，备份为 `/path/to/.skills.backups/<skill>.<随机后缀>/original`。目标不能与源码目录重叠。
 
 ## 同步更新
 
@@ -60,6 +60,20 @@ cd ai-skills
 ```bash
 ./scripts/update.sh --copy --force
 ```
+
+## 安装失败与恢复
+
+安装不是整个批次的原子操作。运行期失败会报告失败目标、已完成数量及当前备份位置；此前成功的安装会保留。若拉取成功而安装失败，仓库已经更新，应解决目标冲突或权限问题后重新运行安装脚本，不要为此重置 Git。
+
+恢复时先检查输出中的备份路径及当前目标内容。将当前目标（包括部分复制结果）移动到安装扫描范围外的另一个唯一位置，再将对应的 `original` 移回原目标。不要直接覆盖或删除尚未检查的内容；恢复完成后核对文件和链接。备份原本是符号链接时保留的是链接，不是源码快照。
+
+更新脚本支持 Git worktree；要求当前分支配置 upstream，并拒绝 detached HEAD、脏工作区和不能快进的分叉。`--help` 和非法参数会在拉取前处理。
+
+## 验证
+
+使用 Python 3 和 Git 运行 `python3 -m unittest discover -s tests -v`。测试仅操作自动清理的临时目录和本地 Git 仓库，不访问远端服务或真实 Skills 安装目录。默认使用 `/bin/bash`；可通过 `SKILLS_TEST_BASH` 指定另一个 Bash，以分别验证 macOS Bash 3.2 和较新版本。
+
+元数据检查运行 `python3 scripts/validate_skills.py`。这是本仓库使用的简单 YAML 标量和 Markdown 本地链接格式检查，不代替完整 Skill 格式验证。行为评审使用 `tests/skill-scenarios.md`；场景断言需结合模型实际输出判断，不由静态检查冒充通过。
 
 ## 新增或修改 Skill
 
