@@ -95,6 +95,18 @@ Use the repository's preferred footer keyword when one is documented, such as `C
 
 When evidence about the change is insufficient to write a truthful, specific subject, request the relevant diff or a concise description. Never fabricate behavior, issue numbers, scopes, or breaking-change details.
 
+## Select the change evidence
+
+When drafting from a repository, keep the message tied to one explicit change set:
+
+1. Follow the user's specified diff, paths, revision range, or staged/working-tree selection first. Do not silently broaden that scope.
+2. If no scope is specified, inspect repository status and use the staged diff when it contains changes. Do not include unstaged edits, even when they affect the same file.
+3. If nothing is staged, use the working-tree changes to draft a message and briefly state that those changes are not staged yet. Do not stage them automatically.
+4. For untracked files within the selected scope, read their relevant contents before describing their behavior. A filename or status entry alone is not sufficient evidence.
+5. If the selected scope has no changes, report that instead of inventing a message. If a diff is incomplete or cannot be read, disclose the limitation and obtain enough evidence before making specific claims.
+
+Use status and diff summaries to locate changes, then read the relevant full diff. For a supplied message rewrite or check, use the supplied context; repository inspection is needed only when verifying claims requires it. Generating a message from unstaged or untracked content does not make that content part of a future commit.
+
 ## Show commit identity before execution
 
 When the user asks to create one or more commits, resolve the effective `user.name` and `user.email` in the current repository once per turn. Immediately before the concrete commit plan, show exactly one concise line:
