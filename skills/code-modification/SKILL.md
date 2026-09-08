@@ -24,7 +24,8 @@ Use only non-mutating inspection to establish:
 - the likely cause or implementation point;
 - the user's requested solution and constraints;
 - affected interfaces, callers, tests, configuration, dependencies, and generated artifacts;
-- the smallest coherent change set and suitable verification.
+- the smallest coherent change set and suitable verification;
+- a relevant existing implementation pattern.
 
 Do not edit files, install or update dependencies, run formatters or generators, apply migrations, or execute commands likely to persist project changes during this phase. If a diagnostic or test may write caches, snapshots, lockfiles, build outputs, or other artifacts, include it in the plan and wait for approval, or use a genuinely non-writing mode.
 
@@ -68,9 +69,10 @@ If the user's approach is infeasible or unsafe, explain the concrete issue and o
 After approval:
 
 1. Translate the approved item numbers and chosen approach into the execution boundary.
-2. Apply only those changes, preserving unrelated user work.
-3. Run only the approved verification steps and avoid unrelated fixes.
-4. Report what changed, what was verified, and any approved item that could not be completed.
+2. Apply only those changes in verifiable increments, preserving unrelated user work.
+3. Run approved checks per relevant increment; rerun passing checks only after relevant changes. No automatic commits.
+4. Check the final diff against approved scope, including formatting and generated files; preserve unrelated user work.
+5. Report what changed, what was verified, and any approved item that could not be completed.
 
 Small implementation details that do not change the stated behavior or expand affected project state may be resolved during execution. Any new file, dependency, migration, public interface change, unrelated refactor, broader configuration change, or other materially new write is outside scope unless the plan explicitly covered it.
 
