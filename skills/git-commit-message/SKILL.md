@@ -69,7 +69,7 @@ If the provided changes contain multiple independent concerns, recommend splitti
 
 Add a body only when the subject does not adequately explain important context, motivation, or consequences. Focus on why the change was needed and any non-obvious behavior.
 
-For an incompatible change, add `!` before the colon and include a `BREAKING CHANGE:` footer that explains the impact. Include migration guidance when it is known:
+For an incompatible change, prefer both `!` before the colon and a `BREAKING CHANGE:` footer that explains the impact. Either marker alone is valid Conventional Commits; distinguish errors from preferences when checking. Include migration guidance when it is known:
 
 ```text
 feat(api)!: change prediction response format
@@ -97,19 +97,15 @@ When evidence about the change is insufficient to write a truthful, specific sub
 
 ## Select the change evidence
 
-When drafting from a repository, keep the message tied to one explicit change set:
-
-1. Follow the user's specified diff, paths, revision range, or staged/working-tree selection first. Do not silently broaden that scope.
-2. If no scope is specified, inspect repository status and use the staged diff when it contains changes. Do not include unstaged edits, even when they affect the same file.
-3. If nothing is staged, use the working-tree changes to draft a message and briefly state that those changes are not staged yet. Do not stage them automatically.
-4. For untracked files within the selected scope, read their relevant contents before describing their behavior. A filename or status entry alone is not sufficient evidence.
-5. If the selected scope has no changes, report that instead of inventing a message. If a diff is incomplete or cannot be read, disclose the limitation and obtain enough evidence before making specific claims.
-
-Use status and diff summaries to locate changes, then read the relevant full diff. For a supplied message rewrite or check, use the supplied context; repository inspection is needed only when verifying claims requires it. Generating a message from unstaged or untracked content does not make that content part of a future commit.
+- Honor user-selected diffs, paths, revisions, or staged/working-tree scope; never broaden it.
+- Otherwise inspect status: prefer staged changes, excluding unstaged edits even in the same file. If nothing is staged, draft from the working tree and say it is unstaged.
+- Read the selected full diff and relevant untracked contents; filenames and summaries are insufficient.
+- Report empty selections. Disclose unreadable or incomplete evidence and obtain what is missing before making claims.
+- For rewrites/checks, supplied context suffices unless claims need repository verification.
 
 ## Show commit identity before execution
 
-When the user asks to create one or more commits, resolve the effective `user.name` and `user.email` in the current repository once per turn. Immediately before the concrete commit plan, show exactly one concise line:
+When the user asks to create one or more commits, resolve the effective `user.name` and `user.email` in the current repository once per turn. Check `git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT` in that environment; report identities differing from config. Recheck after repository or identity changes. Immediately before the concrete commit plan, show exactly one concise line:
 
 ```text
 提交身份：<name> <email>（当前仓库生效配置）
