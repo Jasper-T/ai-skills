@@ -53,4 +53,4 @@ fi
 
 printf 'Updating %s from %s\n' "$branch" "$upstream"
 git -C "$repo_root" pull --ff-only
-exec "$repo_root/scripts/install.sh" "${args[@]}"
+exec "$repo_root/scripts/install.sh" ${args[@]+"${args[@]}"}
