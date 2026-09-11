@@ -52,7 +52,7 @@ class Workflows(unittest.TestCase):
         alias.symlink_to(self.repo / 'skills')
         for path in [self.repo, self.repo / 'skills', self.repo / 'skills/nested', alias]:
             self.install(path, '--force', ok=False)
-        self.assertTrue((self.repo / 'skills/code-modification/SKILL.md').is_file())
+        self.assertTrue((self.repo / 'skills/change-planning/SKILL.md').is_file())
 
     def test_backup_idempotence_and_failure(self):
         target = self.base / 'client skills'
@@ -90,7 +90,7 @@ class Workflows(unittest.TestCase):
         self.git('remote', 'add', 'origin', str(remote))
         self.git('push', '-u', 'origin', 'main')
         self.run_cmd(BASH, 'scripts/update.sh')
-        self.assertTrue((self.base / 'client/skills/code-modification/SKILL.md').is_file())
+        self.assertTrue((self.base / 'client/skills/change-planning/SKILL.md').is_file())
         dirty = self.repo / 'dirty'
         dirty.write_text('local')
         self.assertIn('uncommitted', self.run_cmd(BASH, 'scripts/update.sh', ok=False))
@@ -126,11 +126,11 @@ class Workflows(unittest.TestCase):
 
     def test_metadata_detects_broken_references(self):
         self.assertEqual(validator.validate(self.repo), [])
-        skill = self.repo / 'skills/code-modification'
+        skill = self.repo / 'skills/change-planning'
         path = skill / 'agents/openai.yaml'
-        path.write_text(path.read_text().replace('$code-modification', '$missing-skill'))
+        path.write_text(path.read_text().replace('$change-planning', '$missing-skill'))
         self.assertTrue(validator.validate(self.repo))
-        shutil.copy(ROOT / 'skills/code-modification/agents/openai.yaml', path)
+        shutil.copy(ROOT / 'skills/change-planning/agents/openai.yaml', path)
         with (skill / 'SKILL.md').open('a') as out:
             out.write('\n[missing](references/absent.md)\n')
         self.assertTrue(validator.validate(self.repo))
