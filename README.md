@@ -11,7 +11,7 @@ ai-skills/
 │   ├── install.sh        # 安装或链接仓库内的 Skills
 │   └── update.sh         # 快进拉取后重新安装
 └── skills/
-    ├── code-modification/   # 修改前规划并确认范围
+    ├── change-planning/     # 修改前规划并确认范围
     ├── git-commit-message/  # Conventional Commits 提交消息
     └── skill-repo-sync/     # 维护本仓库的同步工作流
         ├── SKILL.md
@@ -20,7 +20,7 @@ ai-skills/
 
 ## 已纳入同步的 Skills
 
-- `code-modification`
+- `change-planning`
 - `git-commit-message`
 - `skill-repo-sync`
 
