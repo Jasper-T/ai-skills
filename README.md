@@ -6,6 +6,7 @@
 
 ```text
 ai-skills/
+├── AGENTS.md
 ├── README.md
 ├── scripts/
 │   ├── install.sh        # 安装或链接仓库内的 Skills
