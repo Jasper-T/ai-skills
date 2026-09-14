@@ -63,6 +63,12 @@ Prefer the repository's `scripts/update.sh` when present. Before pulling:
 
 If the working tree is dirty, branches have diverged, or a merge conflict appears, stop and preserve the current state. Explain the choices; do not automatically stash, reset, clean, rewrite history, or force-push.
 
+## Check installation status
+
+When checking installation status, and after installing or syncing Skills, prefer the repository's `scripts/check_installation.py` when present. Run `python3 scripts/check_installation.py` from the repository root, passing `--target` for the actual installation directory when needed. Start with the read-only check and report missing Skills, incorrect links, and real directories that still need content comparison; do not treat a real directory as proof of synchronization.
+
+Use `--prune` only when the user has authorized cleanup and the read-only check has identified candidates. It removes only broken symbolic links pointing inside this repository's `skills/` directory; preserve real directories, valid links, and links to other repositories. Re-run the read-only check after cleanup and report any remaining issues. Follow the repository's documented exit codes and partial-failure behavior.
+
 ## Add or update a Skill
 
 Edit the canonical copy under `skills/`. Keep `SKILL.md` concise and place only genuinely reusable scripts, references, or assets beside it. Validate a new or substantially revised Skill with the available Skill validator, and run any added helper script through a meaningful non-destructive test.

@@ -10,7 +10,8 @@ ai-skills/
 ├── README.md
 ├── scripts/
 │   ├── install.sh        # 安装或链接仓库内的 Skills
-│   └── update.sh         # 快进拉取后重新安装
+│   ├── update.sh         # 快进拉取后重新安装
+│   └── check_installation.py # 检查安装及受限清理失效链接
 └── skills/
     ├── change-planning/     # 修改前规划并确认范围
     ├── git-commit-message/  # Conventional Commits 提交消息
@@ -61,6 +62,14 @@ cd ai-skills
 ```bash
 ./scripts/update.sh --copy --force
 ```
+
+## 检查安装状态
+
+在仓库目录运行 `python3 scripts/check_installation.py`，检查技能是否缺失、链接是否正确及 `SKILL.md` 是否存在。默认只读；真实目录单独报告，不据此认定副本与源码一致。支持 `--target /path/to/skills`，默认目标与安装脚本一致。
+
+显式运行 `python3 scripts/check_installation.py --prune` 才会清理：仅删除安装目录顶层中指向本仓库 `skills/` 内、目标已不存在的符号链接，删除前重新检查。真实目录、有效链接和其他仓库的链接均保留。安装与更新脚本不会自动清理；缺失技能仍通过 `./scripts/install.sh` 安装。
+
+退出码：`0` 表示检查通过，`1` 表示存在缺失、冲突、待清理链接或需核对的真实目录，`2` 表示参数或检查/清理错误。清理失败时此前已完成的清理保留；脚本不保证并发修改下的原子性，请勿同时修改安装目录。
 
 ## 安装失败与恢复
 
