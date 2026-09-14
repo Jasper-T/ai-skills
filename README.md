@@ -1,5 +1,9 @@
 # AI Agents
 
+![Agent 架构概念总览](docs/assets/agent-architecture.png)
+
+上图是本仓库的概念总览图。当前仓库主要覆盖 Agent、Skills 及相关配置与规范，不代表已完整实现图中的 Runtime、MCP、A2A 等基础设施。
+
 这个仓库维护我的 AI Agent、Skill 和相关维护说明，是这些能力的唯一源码仓库。GitHub 仓库地址仍为 `Jasper-T/ai-skills`。
 
 ## 结构与职责
