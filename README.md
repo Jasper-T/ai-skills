@@ -1,32 +1,35 @@
-# AI Skills
+# AI Agents
 
-这是个人 AI Skills 的唯一源码仓库（source of truth）。在一台机器上修改并推送，在其他机器上通过 `git pull` 同步；Codex 等客户端从本仓库安装或链接 Skills。
+这个仓库维护我的 AI Agent、Skill 和相关维护说明，是这些能力的唯一源码仓库。GitHub 仓库地址仍为 `Jasper-T/ai-skills`。
 
-## 仓库结构
+## 结构与职责
 
-```text
-ai-skills/
-├── AGENTS.md
-├── README.md
-├── scripts/
-│   ├── install.sh        # 安装或链接仓库内的 Skills
-│   ├── update.sh         # 快进拉取后重新安装
-│   └── check_installation.py # 检查安装及受限清理失效链接
-└── skills/
-    ├── change-planning/     # 修改前规划并确认范围
-    ├── git-commit-message/  # Conventional Commits 提交消息
-    └── skill-repo-sync/     # 维护本仓库的同步工作流
-        ├── SKILL.md
-        └── agents/openai.yaml
-```
+| 位置 | 职责 |
+| --- | --- |
+| [agents/](agents/) | 面向完整目标的工作流编排，目前包含 [coding-agent](agents/coding-agent/AGENT.md) |
+| [skills/](skills/) | 独立、可复用的能力或工作流 |
+| [docs/](docs/) | 设计或维护说明，目前包含 [Skill 安装与维护](docs/maintenance.md) |
+| [AGENTS.md](AGENTS.md) | 维护本仓库时适用的 Skill 设计执行规则 |
+| [scripts/](scripts/) 与 [tests/](tests/) | 已有的 Skill 安装、同步、检查工具及验证用例 |
 
-## 已纳入同步的 Skills
+Agent 面向完整目标，组织多个能力完成任务；Skill 面向单一、可复用的能力或工作流。使用 coding-agent 时读取其 `AGENT.md`；现有安装脚本只安装 Skills。
 
-- `change-planning`
-- `git-commit-message`
-- `skill-repo-sync`
+当前 Skills：
 
-## 在新机器上安装
+- [change-planning](skills/change-planning/SKILL.md)：修改前规划和范围确认。
+- [git-commit-message](skills/git-commit-message/SKILL.md)：生成和检查 Conventional Commits 提交消息。
+- [skill-repo-sync](skills/skill-repo-sync/SKILL.md)：维护 Skill 源码、安装及同步。
+
+## Skill 设计原则
+
+1. **只写模型默认不会稳定做到的事**：规则应补足实际行为缺口。
+2. **只保留特有信息**：优先记录非显然约束、明确决策和工作流边界。
+3. **保持最小必要信息量**：删除不会实质改善行为的指令。
+4. **保持职责边界清晰**：每个 Skill 负责一个能清楚描述的能力或工作流。
+5. **只固化值得固化的问题**：针对反复出现的问题、非显然约束或高代价失误增加规则。
+6. **约束必要结果，不干预无关过程**：只有过程本身重要时才规定实现步骤。
+
+## 安装与维护
 
 ```bash
 git clone git@github.com:Jasper-T/ai-skills.git
@@ -34,76 +37,6 @@ cd ai-skills
 ./scripts/install.sh
 ```
 
-默认安装位置是 `${CODEX_HOME:-$HOME/.codex}/skills`。安装脚本默认创建符号链接，适合需要持续编辑 Skills 的机器：仓库更新后，已链接的 Skill 会立即生效，新增加的 Skill 会在下次运行安装脚本时加入。
+默认以符号链接安装到 `${CODEX_HOME:-$HOME/.codex}/skills`；后续运行 `./scripts/update.sh` 快进同步并安装新增 Skill。
 
-如果客户端不支持符号链接，可以复制安装：
-
-```bash
-./scripts/install.sh --copy
-```
-
-自定义目标目录：
-
-```bash
-./scripts/install.sh --target /path/to/skills
-```
-
-若目标位置已有同名内容，脚本会停止并保留原文件。确认要替换时可加 `--force`；脚本会先检查全部同名冲突，再开始安装。原内容会移动到安装目录旁的唯一备份目录，例如目标为 `/path/to/skills` 时，备份为 `/path/to/.skills.backups/<skill>.<随机后缀>/original`。目标不能与源码目录重叠。
-
-## 同步更新
-
-```bash
-cd ai-skills
-./scripts/update.sh
-```
-
-更新脚本仅执行快进合并（`git pull --ff-only`），并拒绝在仓库有未提交更改时拉取，避免覆盖本地工作。复制安装模式需要显式更新目标副本：
-
-```bash
-./scripts/update.sh --copy --force
-```
-
-## 检查安装状态
-
-在仓库目录运行 `python3 scripts/check_installation.py`，检查技能是否缺失、链接是否正确及 `SKILL.md` 是否存在。默认只读；真实目录单独报告，不据此认定副本与源码一致。支持 `--target /path/to/skills`，默认目标与安装脚本一致。
-
-显式运行 `python3 scripts/check_installation.py --prune` 才会清理：仅删除安装目录顶层中指向本仓库 `skills/` 内、目标已不存在的符号链接，删除前重新检查。真实目录、有效链接和其他仓库的链接均保留。安装与更新脚本不会自动清理；缺失技能仍通过 `./scripts/install.sh` 安装。
-
-退出码：`0` 表示检查通过，`1` 表示存在缺失、冲突、待清理链接或需核对的真实目录，`2` 表示参数或检查/清理错误。清理失败时此前已完成的清理保留；脚本不保证并发修改下的原子性，请勿同时修改安装目录。
-
-## 安装失败与恢复
-
-安装不是整个批次的原子操作。运行期失败会报告失败目标、已完成数量及当前备份位置；此前成功的安装会保留。若拉取成功而安装失败，仓库已经更新，应解决目标冲突或权限问题后重新运行安装脚本，不要为此重置 Git。
-
-恢复时先检查输出中的备份路径及当前目标内容。将当前目标（包括部分复制结果）移动到安装扫描范围外的另一个唯一位置，再将对应的 `original` 移回原目标。不要直接覆盖或删除尚未检查的内容；恢复完成后核对文件和链接。备份原本是符号链接时保留的是链接，不是源码快照。
-
-更新脚本支持 Git worktree；要求当前分支配置 upstream，并拒绝 detached HEAD、脏工作区和不能快进的分叉。`--help` 和非法参数会在拉取前处理。
-
-## 验证
-
-使用 Python 3 和 Git 运行 `python3 -m unittest discover -s tests -v`。测试仅操作自动清理的临时目录和本地 Git 仓库，不访问远端服务或真实 Skills 安装目录。默认使用 `/bin/bash`；可通过 `SKILLS_TEST_BASH` 指定另一个 Bash，以分别验证 macOS Bash 3.2 和较新版本。
-
-元数据检查运行 `python3 scripts/validate_skills.py`。这是本仓库使用的简单 YAML 标量和 Markdown 本地链接格式检查，不代替完整 Skill 格式验证。行为评审使用 `tests/skill-scenarios.md`；场景断言需结合模型实际输出判断，不由静态检查冒充通过。
-
-## 新增或修改 Skill
-
-1. 在 `skills/<skill-name>/` 下创建或编辑 `SKILL.md` 及必要资源。
-2. 验证 Skill，确保 frontmatter、名称和资源引用有效。
-3. 运行 `./scripts/install.sh`，让新 Skill 在本机可用。
-4. 检查 `git status` 和 `git diff`，确认没有密钥、令牌或机器私有配置。
-5. 提交并推送；其他机器运行 `./scripts/update.sh`。
-
-推荐保持每个提交只做一件事，例如：
-
-```bash
-git add skills/my-skill
-git commit -m "feat(my-skill): add initial workflow"
-git push
-```
-
-## 约定
-
-- 只在本仓库的 `skills/` 下维护源码，不把客户端安装目录当作独立副本编辑。
-- 不提交密码、API 密钥、访问令牌、私有证书或机器专属路径。
-- 不使用强制推送、自动重置或自动清理来解决同步冲突；先保留现场并人工决定。
-- 仓库默认保持私有；发布通用 Skill 时再单独评估公开范围和许可。
+复制安装、自定义目录、冲突恢复、安装检查与验证命令见 [Skill 安装与维护](docs/maintenance.md)。
